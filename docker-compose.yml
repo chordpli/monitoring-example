@@ -1,6 +1,33 @@
 version: "3.8"
 
 services:
+
+  init:
+    image: &tempoImage grafana/tempo:latest
+    user: root
+    entrypoint:
+      - "chown"
+      - "10001:10001"
+      - "/var/tempo"
+    volumes:
+      - ./config/tempo-data:/var/tempo
+
+  tempo:
+    image: *tempoImage
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - ./config/tempo/tempo.yaml:/etc/tempo.yaml
+      - ./config/tempo:/var/tempo
+    ports:
+#      - "14268:14268"  # jaeger ingest
+      - "3200:3200"   # tempo
+      - "9095:9095" # tempo grpc
+#      - "4317:4317"  # otlp grpc
+#      - "4318:4318"  # otlp http
+#      - "9411:9411"   # zipkin
+    depends_on:
+      - init
+
   monitoring-fastapi:
     container_name: monitoring
     hostname: monitoring
@@ -25,6 +52,7 @@ services:
   grafana:
     image: grafana/grafana
     container_name: grafana
+    restart: unless-stopped
     ports:
       - 3000:3000
     volumes:
@@ -43,7 +71,7 @@ volumes:
       o: bind
       type: none
       device: ./config/grafana_data
-  postgres_data:
+  grafana-storage: { }
 
 networks:
   default:
