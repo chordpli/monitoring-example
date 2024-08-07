@@ -1,0 +1,38 @@
+version: 1
+disable_existing_loggers: false
+
+formatters:
+  standard:
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    formatter: standard
+    level: DEBUG
+
+  file:
+    class: logging.FileHandler
+    formatter: standard
+    filename: /var/log/containers/monitoring-a/fastapi.log
+    level: DEBUG
+
+loggers:
+  uvicorn:
+    handlers: [console, file]
+    level: DEBUG
+    propagate: no
+
+  uvicorn.error:
+    handlers: [console, file]
+    level: DEBUG
+    propagate: no
+
+  uvicorn.access:
+    handlers: [console, file]
+    level: DEBUG
+    propagate: no
+
+root:
+  handlers: [console, file]
+  level: DEBUG

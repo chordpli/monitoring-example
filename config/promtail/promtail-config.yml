@@ -3,16 +3,34 @@ server:
   grpc_listen_port: 0
 
 positions:
-  filename: /tmp/positions.yaml
+  filename: /tmp/positions.yml
 
 clients:
-  - url: http://gateway:3100/loki/api/v1/push
+  - url: http://loki:3100/loki/api/v1/push
 
 scrape_configs:
-  - job_name: fastapi-logs
+  - job_name: fastapi-logs-a
     static_configs:
       - targets:
           - localhost
         labels:
           job: fastapi
-          __path__: /var/log/containers/*.log
+          container_name: monitoring-a
+          __path__: /var/log/containers/monitoring-a/*.log
+
+  - job_name: fastapi-logs-b
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: fastapi
+          container_name: monitoring-b
+          __path__: /var/log/containers/monitoring-b/*.log
+
+  - job_name: prometheus-logs
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: prometheus
+          __path__: /var/log/prometheus/*.log
