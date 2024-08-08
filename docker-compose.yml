@@ -161,7 +161,7 @@ services:
   promtail:
     image: grafana/promtail:2.5.0
     volumes:
-      - ./logs:/var/log
+      - ./logs:/var/log/containers/
       - ./config/promtail/promtail-config.yml:/etc/promtail/promtail-config.yml
     command: -config.file=/etc/promtail/promtail-config.yml
     networks:
