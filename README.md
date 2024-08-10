@@ -18,3 +18,8 @@ http_requests_total
 login
 admin/admin
 ```
+
+## LOKI
+```shell
+{job="fastapi"}
+```
